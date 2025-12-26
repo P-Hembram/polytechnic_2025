@@ -3,7 +3,7 @@ let questions = [];
 
         async function loadQuiz() {
             try {
-                const response = await fetch("Qus_poly-2025.json");
+                const response = await fetch("qustions.json");
                 questions = await response.json();
                 renderQuiz();
             } catch (error) {
@@ -66,4 +66,5 @@ let questions = [];
         }
 
         loadQuiz();
+
 

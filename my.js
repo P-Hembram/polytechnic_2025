@@ -32,7 +32,7 @@ let questions = [];
                     Object.entries(optionsObj).forEach(([key, text]) => {
                         const optDiv = document.createElement("div");
                         optDiv.className = "option";
-                        optDiv.innerHTML = `<span class="mr-3 font-bold opacity-40">${key}.</span> ${text}`;
+                        optDiv.innerHTML = `<span class="mr-3 font-bold opacity-40">${key}.</span> <p class="optext">${text}</p> `;
 
                         if (userSelections[qIdx]) {
                             optDiv.classList.add("disabled");
@@ -64,5 +64,6 @@ let questions = [];
                 window.scrollTo(0,0);
             }
         }
+
 
         loadQuiz();

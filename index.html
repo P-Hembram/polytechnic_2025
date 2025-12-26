@@ -1,113 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polytechic_2024 Questions</title>
-    <script src="jquery.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="Qus_poly-2025.js"></script>
-
+    <title>Polytechnic 2024 MCQ Portal</title>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: rgb(228, 222, 222);
-            color: #030303;
-        }
-        
-        .container {
-            max-width: 900px;
-            margin: auto;
-            padding: 2rem;
-        }
-        
-        .question-card {
-            background-color: #becae0;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease-in-out;
-        }
-        /* .question-card:hover {
-            transform: translateY(-5px);
-            } */
-        
-        .question-number {
-            font-size: 1.25rem;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
-        }
-        
-        .question-text {
-            font-weight: 700;
-            font-size: 1.5rem;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-        
-        .options-list {
-            list-style: none;
-            padding: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 0.75rem;
-        }
-        
-        .option-item {
-            padding: 0.75rem 1rem;
-            border-radius: 0.75rem;
-            background-color: #f6f6f6;
-            transition: background-color 0.2s ease-in-out;
-            cursor: pointer;
-        }
-        /* .option-item.correct {
-            background-color: #d1fae5;
-            font-weight: 600;
-            color: #065f46;
-            } */
-        
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .header-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #1f2937;
-        }
-        
-        .header-subtitle {
-            font-size: 1.125rem;
-            color: #6b7280;
-        }
-        
-        img {
-            width: 300px;
-        }
-    </style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+        --primary-blue: #1a73e8;
+        --bg-gray: #f8f9fa;
+        --text-dark: #202124;
+        --correct-green: #1e7e34;
+        --wrong-red: #d93025;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #e0dfdf;
+        color: var(--text-dark);
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+
+    .quiz-container {
+        max-width: 1250px;
+        margin: 0 auto;
+        padding: 20px 15px;
+    }
+
+    /* Header Styling */
+    .header-section {
+        background: rgb(230, 230, 230);
+        padding: 30px 20px;
+        border-radius: 20px;
+        text-align: center;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .header-title {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--primary-blue);
+        margin-bottom: 10px;
+    }
+
+    /* Card Layout: Controls visibility to 1-3 questions */
+    .card {
+        background: #f7f3f3;
+        padding: 35px 25px;
+        margin-bottom: 60px; /* Forces spacing between questions */
+        border-radius: 24px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        border: 0.05px solid #f7f;
+        min-height: 350px; /* Ensures question fills a good portion of mobile screen */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* Large Text for Readability */
+    .card h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: #111;
+    }
+
+    .question-img {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        border-radius: 12px;
+        margin: 0 auto 20px auto;
+        display: block;
+    }
+
+    /* Options: Large Touch Targets */
+    .option {
+    padding: 20px;
+    margin: 12px 0;
+    background: #e0dfdf;
+    border: 2px solid #eef0f2;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 1.25rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+    .option:hover {
+        border-color: var(--primary-blue);
+        background: #f1f7ff;
+    }
+
+    /* Color Logic */
+    .correct {
+        background-color: #e6ffed !important;
+        border-color: #28a745 !important;
+        color: var(--correct-green) !important;
+        font-weight: 700;
+    }
+
+    .wrong {
+        background-color: #fff5f5 !important;
+        border-color: #dc3545 !important;
+        color: var(--wrong-red) !important;
+    }
+
+    .disabled {
+        pointer-events: none;
+        opacity: 0.85;
+    }
+
+    .btn-reset {
+        background-color: #ea4335;
+        color: white;
+        padding: 14px 28px;
+        border-radius: 12px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        width: 100%; /* Full width on mobile */
+    }
+
+    /* Mobile Adjustments */
+    @media (max-width: 600px) {
+        .header-title { font-size: 1.5rem; }
+        .card { padding: 25px 20px; margin-bottom: 50px; }
+        .card h3 { font-size: 1.35rem; }
+        .option { font-size: 1.15rem; padding: 16px; }
+    }
+</style>
 </head>
+<body>
 
-<body /*class="bg-gray-100"*/>
-
-    <div class="container mx-auto py-8 px-4">
-        <header class="header">
-            <h1 class="header-title">झारखण्ड पॉलिटेक्निक प्रवेश परीक्षा - 2025 (परीक्षा तिथि : 18-05-2025)</h1>
-            <p class="header-subtitle">Questions : Phy = 1 to 50 || Chem 51 to 100 || Math 101 to 150</p>
+    <div class="quiz-container">
+        <header class="header-section">
+            <h1 class="">
+                झारखण्ड पॉलिटेक्निक प्रवेश परीक्षा - 2025
+            </h1>
+            <p class="">
+                Phy: 1-50 | Chem: 51-100 | Math: 101-150
+            </p>
+            <button onclick="resetQuiz()" class="btn-reset">Reset Progress</button>
         </header>
 
-
-        <div id="allQustion">
-
+        <div id="quiz-box">
+            <div class="">Loading questions...</div>
+        </div>
+        
+        <div class="">
+            <button onclick="resetQuiz()" class="btn-reset">Reset Progress</button>
         </div>
     </div>
 
-
-    <script src="my.js"></script>
-
+ <script src="my.js" ></script>
 </body>
-
 </html>

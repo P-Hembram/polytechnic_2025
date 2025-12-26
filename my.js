@@ -1,53 +1,68 @@
-$(document).ready(function() {
-    console.log();
+let questions = [];
+        let userSelections = JSON.parse(localStorage.getItem("myQuizProgress")) || {};
 
-    let data = "";
-    let No = 0;
-
-    qustion_2024.map((value, i) => {
-        //    
-        data += `
-            <div class="question-card">
-            <div class="question-number">Question ${No+1}</div>
-            <div class="question-text">${qustion_2024[i].question}</div>
-            <div class = "my-10"><img src="${qustion_2024[i].img}"></div>
-
-            <ul class="options-list" data-ans="${qustion_2024[i].answer}">
-                
-                <li class="option-item" data-whichabtn="A" >a) ${qustion_2024[i].options.A}</li>
-                <li class="option-item" data-whichabtn="B" >b) ${qustion_2024[i].options.B}</li>
-                <li class="option-item" data-whichabtn="C" >c) ${qustion_2024[i].options.C}</li>
-                <li class="option-item" data-whichabtn="D" >d) ${qustion_2024[i].options.D}</li>
-                
-            </ul>
-        </div>
-        `
-        No++;
-        rightAns = qustion_2024[i].answer;
-    })
-    $("#allQustion").html(data);
-
-    $(".option-item").on("click", function(e) {
-        let whichabtn = $(this).data("whichabtn");
-        let ansIs = $(this).parent().attr("data-ans");
-
-        // console.log(whichabtn);
-        // console.log(ansIs);
-
-        if (whichabtn == ansIs) {
-            $(this).css("color", "green")
-            $(this).css("backgroundColor", "#abe9ab")
-
-        } else {
-            $(this).css("color", "red")
-            $(this).css("backgroundColor", "#ffa599ff")
+        async function loadQuiz() {
+            try {
+                const response = await fetch("questions.json");
+                questions = await response.json();
+                renderQuiz();
+            } catch (error) {
+                document.getElementById("quiz-box").innerHTML = "<p class='text-center text-red-500'>Error loading data.</p>";
+            }
         }
-    })
 
+        function renderQuiz() {
+            const quizBox = document.getElementById("quiz-box");
+            quizBox.innerHTML = "";
 
+            questions.forEach((q, qIdx) => {
+                const card = document.createElement("div");
+                card.className = "card";
+                
+                let cardContent = `<h3>${q.question}</h3>`;
+                if (q.img && q.img.trim() !== "") {
+                    cardContent += `<img src="${q.img}" class="question-img">`;
+                }
+                card.innerHTML = cardContent;
 
+                // FIX APPLIED HERE: Using ["options:"] to match your JSON
+                const optionsObj = q["options:"]; 
+                
+                if (optionsObj) {
+                    Object.entries(optionsObj).forEach(([key, text]) => {
+                        const optDiv = document.createElement("div");
+                        optDiv.className = "option";
+                        optDiv.innerHTML = `<span class="mr-3 font-bold opacity-40">${key}.</span> ${text}`;
 
+                        if (userSelections[qIdx]) {
+                            optDiv.classList.add("disabled");
+                            if (key === q.answer) optDiv.classList.add("correct");
+                            if (key === userSelections[qIdx] && key !== q.answer)
+                                optDiv.classList.add("wrong");
+                        } else {
+                            optDiv.onclick = () => selectOption(qIdx, key);
+                        }
+                        card.appendChild(optDiv);
+                    });
+                }
 
+                quizBox.appendChild(card);
+            });
+        }
 
+        function selectOption(qIdx, selectedKey) {
+            userSelections[qIdx] = selectedKey;
+            localStorage.setItem("myQuizProgress", JSON.stringify(userSelections));
+            renderQuiz();
+        }
 
-});
+        function resetQuiz() {
+            if(confirm("Reset all progress?")) {
+                localStorage.removeItem("myQuizProgress");
+                userSelections = {};
+                renderQuiz();
+                window.scrollTo(0,0);
+            }
+        }
+
+        loadQuiz();
